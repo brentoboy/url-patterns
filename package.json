@@ -1,0 +1,30 @@
+{
+  "author": "Brent Larsen",
+  "name": "url-patterns",
+  "description": "a small library for making easily maintainable regexs for common pretty url patterns",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/brentoboy/url-patterns.git"
+  },
+  "main": "./src/urlPatterns.js",
+  "keywords": [
+    "url",
+    "regex",
+    "pretty urls"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": ">= 1.17.1"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/brentoboy/url-patterns/issues"
+  }
+}
