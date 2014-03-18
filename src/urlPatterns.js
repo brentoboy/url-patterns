@@ -48,6 +48,7 @@
 
 		return function(obj) {
 			var returnValue = builderTemplate;
+			obj = obj || {};
 			for(var i = 0; i < urlParams.length; i++) {
 				returnValue = returnValue.replace("{" + urlParams[i] + "}", encodeURIComponent(obj[urlParams[i]]));
 			}
