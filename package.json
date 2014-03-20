@@ -2,7 +2,7 @@
   "author": "Brent Larsen",
   "name": "url-patterns",
   "description": "a small library for making easily maintainable regexs for common pretty url patterns",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "repository": {
     "type": "git",
     "url": "git://github.com/brentoboy/url-patterns.git"
