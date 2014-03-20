@@ -9,7 +9,7 @@
 		slug: "([a-z0-9_\\-]+)",
 		string: "([a-z0-9 !@#$%^&*()_+=`{}\\[\\]:;'<>?,.\\-]+)",
 		date: "(\\d{4}-\\d{1,2}-\\d{1,2})",
-		decimal: "(\\-?\\d+(\.\\d+)?)",
+		decimal: "(\\-?\\d+(\\\.\\d+)?)",
 		path: "([a-z0-9 !@#$%^&*()_+=`{}\\[\\]:;'<>?,.\\\\\\/\\-]+)",
 		csv: "([%a-z0-9\\-,]+)",
 	}
@@ -32,7 +32,7 @@
 		return new RegExp("^" + pattern + "$", "i");
 	}
 
-	urlPatterns.createBuilder = function(pattern) {
+	urlPatterns.createBuilder = function(pattern, nullReplacements) {
 		var builderTemplate = pattern;
 		var urlParams = [];
 		var paramTypes = [];
@@ -49,8 +49,30 @@
 		return function(obj) {
 			var returnValue = builderTemplate;
 			obj = obj || {};
+			nullReplacements = nullReplacements || {};
 			for(var i = 0; i < urlParams.length; i++) {
-				returnValue = returnValue.replace("{" + urlParams[i] + "}", encodeURIComponent(obj[urlParams[i]]));
+				var replacementValue = obj[urlParams[i]];
+				if (replacementValue === undefined || replacementValue === null) {
+					replacementValue = nullReplacements[urlParams[i]];
+					if (replacementValue === undefined || replacementValue === null) {
+						switch(paramTypes[i]) {
+							case "int":
+							case "decimal":
+							case "csv":
+								replacementValue = "0";
+								break;
+							case "slug":
+							case "string":
+							case "path":
+								replacementValue = "undefined";
+								break;
+							case "date":
+								replacementValue = "0000-00-00";
+								break;
+						}
+					}
+				}
+				returnValue = returnValue.replace("{" + urlParams[i] + "}", encodeURIComponent(replacementValue));
 			}
 			return returnValue;
 		}
@@ -71,12 +93,12 @@
 		}
 
 		return function(path) {
-			var matches = regex.exec(path)
-			var values = {}
-			for (var i = 0; i < urlParams.length; i++) {
-				values[urlParams[i]] = matches[i + 1]
+			var matches = regex.exec(path) || [];
+			var values = {};
+			for (var i = 0; i < urlParams.length && i < matches.length; i++) {
+				values[urlParams[i]] = matches[i + 1];
 			}
-			return values
+			return values;
 		}
 	}
 
